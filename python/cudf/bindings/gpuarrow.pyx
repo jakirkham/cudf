@@ -262,18 +262,6 @@ class GpuArrowReader(Sequence):
                                               self._gpu_data.size)
             # check for failure in parsing the recordbatches
             _check_error(ipcparser)
-            # get schema as json
-            _logger.debug('IPCParser get metadata as json')
-            schemadct = _load_json(
-                gdf_ipc_parser_get_schema_json(ipcparser))
-            layoutdct = _load_json(
-                gdf_ipc_parser_get_layout_json(ipcparser))
-
-            # get data offset
-            _logger.debug('IPCParser data region offset')
-            dataoffset = gdf_ipc_parser_get_data_offset(ipcparser)
-            dataoffset = int(ffi.cast('uint64_t', dataoffset))
-            dataptr = self._gpu_data[dataoffset:]
         finally:
             _logger.debug('close IPCParser')
             gdf_ipc_parser_close(ipcparser)

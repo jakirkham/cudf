@@ -5,12 +5,13 @@
 # cython: embedsignature = True
 # cython: language_level = 3
 
-from libc.stdint cimport uint8_t
+from libc.stdint cimport uint8_t, uintptr_t
 
 from cudf.bindings.cudf_cpp cimport *
 from cudf.bindings.cudf_cpp import *
 from cudf.bindings.gpuarrow cimport *
 
+import ctypes
 import logging
 import json
 from collections import namedtuple, OrderedDict
@@ -257,7 +258,7 @@ class GpuArrowReader(Sequence):
             # check for failure in parseing the schema
             _check_error(ipcparser)
 
-            gpu_ptr = self._gpu_data.device_ctypes_pointer.value
+            gpu_ptr = <uintptr_t>self._gpu_data.device_ctypes_pointer
             gdf_ipc_parser_open_recordbatches(ipcparser, gpu_ptr,
                                               self._gpu_data.size)
             # check for failure in parsing the recordbatches

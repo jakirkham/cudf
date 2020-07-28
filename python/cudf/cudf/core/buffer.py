@@ -75,9 +75,9 @@ class Buffer(Serializable):
         return intf
 
     def to_host_array(self):
-        data = np.empty((self.size,), "u1")
-        rmm._lib.device_buffer.copy_ptr_to_host(self.ptr, data)
-        return data
+        arr = np.empty((self.size,), "u1")
+        rmm._lib.device_buffer.copy_ptr_to_host(self.ptr, arr)
+        return arr
 
     def _init_from_array_like(self, data, owner):
 

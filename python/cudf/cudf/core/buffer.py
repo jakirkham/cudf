@@ -74,8 +74,10 @@ class Buffer(Serializable):
         }
         return intf
 
-    def to_host_array(self):
-        arr = np.empty((self.size,), "u1")
+    def to_host_array(self, arr=None):
+        if arr is None:
+            arr = np.empty((self.size,), "u1")
+
         rmm._lib.device_buffer.copy_ptr_to_host(self.ptr, arr)
         return arr
 

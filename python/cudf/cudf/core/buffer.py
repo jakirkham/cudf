@@ -75,13 +75,13 @@ class Buffer(Serializable):
         }
         return intf
 
-    def to_host_array(self):
+    def to_host_array(self, stream_ptr=0):
         data = numpy.ndarray(
             shape=(buf.nbytes,),
             dtype="u1",
             buffer=cupy.cuda.alloc_pinned_memory(buf.nbytes),
         )
-        rmm._lib.device_buffer.copy_ptr_to_host(self.ptr, data)
+        rmm._lib.device_buffer.copy_ptr_to_host(self.ptr, data, stream_ptr)
         return data
 
     def _init_from_array_like(self, data, owner):

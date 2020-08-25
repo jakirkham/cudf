@@ -2,6 +2,7 @@ import functools
 import operator
 import pickle
 
+import cupy as cp
 import numpy as np
 
 import rmm
@@ -75,7 +76,11 @@ class Buffer(Serializable):
         return intf
 
     def to_host_array(self):
-        data = np.empty((self.size,), "u1")
+        data = numpy.ndarray(
+            shape=(buf.nbytes,),
+            dtype="u1",
+            buffer=cupy.cuda.alloc_pinned_memory(buf.nbytes),
+        )
         rmm._lib.device_buffer.copy_ptr_to_host(self.ptr, data)
         return data
 
